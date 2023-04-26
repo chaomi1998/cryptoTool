@@ -64,7 +64,7 @@ class MainWindow(QtWidgets.QWidget):
         key = bytes.fromhex(self.keyEdit.text())
         iv = bytes.fromhex(self.ivEdit.text())
         aes = AES.new(key, AES.MODE_CBC, iv)
-        data = aes.encrypt(data)
+        data = aes.encrypt(self.pkcs7_padding(data))
         
         with open(name2, "wb") as outfile:
             outfile.write(data)
@@ -84,12 +84,18 @@ class MainWindow(QtWidgets.QWidget):
         iv = bytes.fromhex(self.ivEdit.text())
         aes = AES.new(key, AES.MODE_CBC, iv)
         data = aes.decrypt(data)
-        
+        data = self.pkcs7_depadding(data)
         with open(name2, "wb") as outfile:
             outfile.write(data)
-            
-        
-        
+    
+    def pkcs7_padding(self, data):
+        padding_size = 16 - (len(data) % 16)
+        return data + (chr(padding_size) * padding_size).encode("ascii")
+    
+    def pkcs7_depadding(self, data):
+        padding = int(data[-1])
+        return data[0:-padding]          
+                
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])
