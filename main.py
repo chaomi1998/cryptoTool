@@ -32,20 +32,21 @@ class MainWindow(QtWidgets.QWidget):
         self.layout().addWidget(self.encrypoBtn)
         self.layout().addWidget(self.decrypoBtn)
         self.inputBtn.clicked.connect(self.get_input)
+        self.outputBtn.clicked.connect(self.get_output)
         self.encrypoBtn.clicked.connect(self.encrypo)
         self.decrypoBtn.clicked.connect(self.decrypo)
         
     @QtCore.Slot()
     def get_input(self):
-        path, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open", QtCore.QCoreApplication.applicationDirPath())
+        path, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open", './')
         
         if path is not None:
             self.inputEdit.setText(path)
             self.outputEdit.setText(path + '.tmp')
         
     @QtCore.Slot()
-    def get_output(self):
-        path, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save", QtCore.QCoreApplication.applicationDirPath())
+    def get_output(self): 
+        path, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'Save', self.outputEdit.text())
         
         if path is not None:
             self.outputEdit.setText(path)
